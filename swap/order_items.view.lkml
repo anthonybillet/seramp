@@ -77,6 +77,7 @@ view: order_items {
   dimension: sale_price {
     type: number
     sql: ${TABLE}."SALE_PRICE" ;;
+    value_format_name: usd
   }
 
   dimension_group: shipped {
@@ -104,6 +105,12 @@ view: order_items {
     sql: ${TABLE}."USER_ID" ;;
   }
 
+  dimension: gross_margin {
+    type: number
+    sql: ${sale_price} - ${inventory_items.cost} ;;
+    value_format_name: usd
+  }
+
   # A measure is a field that uses a SQL aggregate function. Here are count, sum, and average
   # measures for numeric dimensions, but you can also add measures of many different types.
   # Click on the type parameter to see all the options in the Quick Help panel on the right.
@@ -113,20 +120,18 @@ view: order_items {
     drill_fields: [detail*]
   }
 
-  # These sum and average measures are hidden by default.
-  # If you want them to show up in your explore, remove hidden: yes.
-
   measure: total_sale_price {
     type: sum
-    hidden: yes
     sql: ${sale_price} ;;
+    value_format_name: usd
   }
 
-  measure: average_sale_price {
-    type: average
-    hidden: yes
-    sql: ${sale_price} ;;
+  measure: total_gross_margin {
+    type: sum
+    sql: ${gross_margin} ;;
+    value_format_name: usd
   }
+
 
   # ----- Sets of fields for drilling ------
   set: detail {

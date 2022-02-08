@@ -81,6 +81,19 @@ view: users {
     sql: ${TABLE}."LONGITUDE" ;;
   }
 
+  dimension: location {
+    type: location
+    sql_latitude: ${latitude} ;;
+    sql_longitude: ${longitude} ;;
+  }
+
+  dimension: distance_from_distribution_center {
+    type: distance
+    start_location_field: distribution_centers.location
+    end_location_field: location
+    units: miles
+  }
+
   dimension: state {
     type: string
     sql: ${TABLE}."STATE" ;;
