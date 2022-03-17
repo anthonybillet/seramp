@@ -105,6 +105,13 @@ view: order_items {
     sql: ${TABLE}."USER_ID" ;;
   }
 
+  #easy cohorting, assumes they already track signup date
+  dimension_group: since_signup {
+    type: duration
+    sql_start: ${users.created_raw} ;;
+    sql_end: ${created_raw} ;;
+  }
+
   dimension: gross_margin {
     type: number
     sql: ${sale_price} - ${inventory_items.cost} ;;
@@ -130,6 +137,17 @@ view: order_items {
     type: sum
     sql: ${gross_margin} ;;
     value_format_name: usd
+  }
+
+  measure: count_orders {
+    label: "# of Orders"
+    type: count_distinct
+    sql: ${order_id} ;;
+  }
+
+  measure: first_order_time {
+    type: date_time
+    sql: MIN(${created_raw}) ;;
   }
 
 
