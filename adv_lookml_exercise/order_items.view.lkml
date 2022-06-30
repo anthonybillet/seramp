@@ -25,10 +25,36 @@ view: order_items {
       date,
       week,
       month,
+      month_num,
+      month_name,
       quarter,
       year
     ]
     sql: ${TABLE}.created_at ;;
+  }
+
+  filter: this_period_filter {
+    type: date
+    description: "Use this filter to define the current and previous period for analysis"
+    sql: ${period} IS NOT NULL ;;
+  }
+
+  dimension: period {
+    type: string
+    description: "The reporting period as selected by the This Period Filter"
+    sql:
+      CASE
+        WHEN {% date_start this_period_filter %} is not null AND {% date_end this_period_filter %} is not null /* date ranges or in the past x days */
+          THEN
+            CASE
+              WHEN ${created_raw} >= {% date_start this_period_filter %}
+                AND ${created_raw} <= {% date_end this_period_filter %}
+                THEN 'This Period'
+              WHEN ${created_raw} >= DATEADD(day,-1*DATEDIFF(day,{% date_start this_period_filter %}, {% date_end this_period_filter %} ) + 1, DATEADD(day,-1,{% date_start this_period_filter %} ) )
+                AND ${created_raw} <= DATEADD(day,-1,{% date_start this_period_filter %} ) + 1
+                THEN 'Previous Period'
+            END
+        END ;;
   }
 
   dimension_group: delivered {
@@ -121,15 +147,72 @@ view: order_items {
 
   measure: total_sale_price {
     type: sum
-    hidden: yes
+    #hidden: yes
     sql: ${sale_price} ;;
   }
 
   measure: average_sale_price {
     type: average
-    hidden: yes
+    #hidden: yes
     sql: ${sale_price} ;;
   }
+
+  measure: cumulative_total_sales {
+    description: "Cumulative total sales from items sold (also known as a running total) "
+    type: running_total
+    value_format_name: usd_0
+    sql: ${sale_price};;
+    drill_fields: [detail*]
+  }
+
+  measure: total_gross_revenue {
+    description: "Total revenue from completed sales (cancelled and returned orders excluded)"
+    type: sum
+    sql: ${sale_price};;
+    filters: [status: "-Cancelled, -Returned"]
+    value_format_name: usd_0
+    drill_fields: [users.gender, users.age_tiers, users.first_name, users.last_name, inventory_items.product_name]
+  }
+
+  measure: total_gross_margin_amount {
+    description: "Total difference between the total revenue from completed sales and the cost of the goods that were sold"
+    type: number
+    value_format_name: usd_0
+    sql: ${total_gross_revenue} - ${inventory_items.total_cost};;
+    drill_fields: [detail*]
+  }
+
+  measure: average_gross_margin_amount {
+    description: "Average difference between the total revenue from completed sales and the cost of the goods that were sold"
+    type: number
+    value_format_name: usd_0
+    sql: 1.0 * ${total_gross_margin_amount} / NULLING(${count},0);;
+    drill_fields: [detail*]
+  }
+
+  measure: gross_margin_percentage {
+    description: "Total Gross Margin Amount / Total Gross Revenue"
+    type: number
+    value_format_name: percent_1
+    sql: 1.0 * ${total_gross_margin_amount}/NULLIF (${total_gross_revenue},0) ;;
+    drill_fields: [detail*]
+  }
+
+  measure: number_of_items_returned {
+    description: "Number of items that were returned by dissatisfied customers"
+    type: count
+    filters: [status: "Returned"]
+    drill_fields: [detail*]
+  }
+
+  measure: item_returned_rate {
+    description: "Number of Items Returned / total number of items sold"
+    type: number
+    value_format_name: percent_1
+    sql: 1.0 * ${number_of_items_returned} / NULLIF(${count} ,0) ;;
+    drill_fields: [detail*]
+  }
+
 
   # ----- Sets of fields for drilling ------
   set: detail {

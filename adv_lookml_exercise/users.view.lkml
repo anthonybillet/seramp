@@ -23,6 +23,14 @@ view: users {
     sql: ${TABLE}.age ;;
   }
 
+  dimension: age_tiers {
+    type: tier
+    style: integer
+    tiers: [15, 26, 36, 51, 66]
+    sql: ${age} ;;
+    value_format: "#,##0"
+  }
+
   dimension: city {
     type: string
     sql: ${TABLE}.city ;;
@@ -43,12 +51,19 @@ view: users {
       raw,
       time,
       date,
+      day_of_month,
       week,
       month,
       quarter,
       year
     ]
     sql: ${TABLE}.created_at ;;
+  }
+
+  dimension: is_new {
+    description: "user created in the last 90 days"
+    type: yesno
+    sql: DATEDIFF('DAY', ${created_date}, CURRENT_DATE) < 91 ;;
   }
 
   dimension: email {
@@ -81,6 +96,27 @@ view: users {
     sql: ${TABLE}.longitude ;;
   }
 
+  dimension: location {
+    group_label: "Location Details"
+    type: location
+    sql_latitude: ${latitude} ;;
+    sql_longitude: ${longitude} ;;
+  }
+
+
+  dimension: approx_location {
+    group_label: "Location Details"
+    type: location
+    sql_latitude: round(${latitude},1) ;;
+    sql_longitude: round(${longitude},1) ;;
+    link: {
+      label: "Google Directions from {{ distribution_centers.name._value }}"
+      url: "{% if distribution_centers.location._in_query %}https://www.google.com/maps/dir/'{{ distribution_centers.latitude._value }},{{ distribution_centers.longitude._value }}'/'{{ approx_latitude._value }},{{ approx_longitude._value }}'{% endif %}"
+      icon_url: "http://www.google.com/s2/favicons?domain=www.google.com"
+    }
+    drill_fields: [location, city, country, products.category]
+  }
+
   dimension: state {
     type: string
     sql: ${TABLE}.state ;;
@@ -110,39 +146,54 @@ view: users {
 
   measure: total_age {
     type: sum
-    hidden: yes
     sql: ${age} ;;
   }
 
   measure: average_age {
     type: average
-    hidden: yes
     sql: ${age} ;;
   }
 
   measure: total_latitude {
     type: sum
-    hidden: yes
     sql: ${latitude} ;;
   }
 
   measure: average_latitude {
     type: average
-    hidden: yes
     sql: ${latitude} ;;
   }
 
   measure: total_longitude {
     type: sum
-    hidden: yes
     sql: ${longitude} ;;
   }
 
   measure: average_longitude {
     type: average
-    hidden: yes
     sql: ${longitude} ;;
   }
+
+  measure: number_of_users_returning_items {
+    description: "Number of users who have returned an item at some point"
+    type: count
+    filters: [order_items.status: "Returned"]
+  }
+
+  measure: percentage_of_users_with_returns {
+    description: "Number of Customer Returning Items / total number of customers"
+    type: number
+    value_format_name: percent_2
+    sql:  1.0 * ${number_of_users_returning_items} / NULLIF( ${count}, 0);;
+  }
+
+  measure: average_spend_per_customer {
+    description: "Total Sale Price / total number of customers"
+    type: number
+    value_format_name: usd
+    sql: 1.0 * ${order_items.total_sale_price}/ NULLIF(${count},0) ;;
+  }
+
 
   # ----- Sets of fields for drilling ------
   set: detail {

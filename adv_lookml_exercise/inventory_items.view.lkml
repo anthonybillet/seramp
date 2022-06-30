@@ -110,25 +110,22 @@ view: inventory_items {
 
   measure: total_cost {
     type: sum
-    hidden: yes
+
     sql: ${cost} ;;
   }
 
   measure: average_cost {
     type: average
-    hidden: yes
     sql: ${cost} ;;
   }
 
   measure: total_product_retail_price {
     type: sum
-    hidden: yes
     sql: ${product_retail_price} ;;
   }
 
   measure: average_product_retail_price {
     type: average
-    hidden: yes
     sql: ${product_retail_price} ;;
   }
 }
