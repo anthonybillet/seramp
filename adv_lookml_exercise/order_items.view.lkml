@@ -50,8 +50,8 @@ view: order_items {
               WHEN ${created_raw} >= {% date_start this_period_filter %}
                 AND ${created_raw} <= {% date_end this_period_filter %}
                 THEN 'This Period'
-              WHEN ${created_raw} >= DATEADD(day,-1*DATEDIFF(day,{% date_start this_period_filter %}, {% date_end this_period_filter %} ) + 1, DATEADD(day,-1,{% date_start this_period_filter %} ) )
-                AND ${created_raw} <= DATEADD(day,-1,{% date_start this_period_filter %} ) + 1
+              WHEN ${created_raw} >= date_add(day,-1*date_diff(day,{% date_start this_period_filter %}, {% date_end this_period_filter %} ) + 1, date_add(day,-1,{% date_start this_period_filter %} ) )
+                AND ${created_raw} <= date_add(day,-1,{% date_start this_period_filter %} ) + 1
                 THEN 'Previous Period'
             END
         END ;;
