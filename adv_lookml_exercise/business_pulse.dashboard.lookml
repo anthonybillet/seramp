@@ -48,9 +48,9 @@
     model: adv_lookml_thelook
     explore: order_items
     type: single_value
-    fields: [order_items.gross_margin_percentage, order_items.period]
+    fields: [order_items.gross_margin_percentage, order_items.previous_period]
     filters:
-      order_items.this_period_filter: 30 days
+      order_items.previous_period_filter: 30 days
     sorts: [order_items.gross_margin_percentage desc]
     limit: 500
     column_limit: 50
@@ -81,10 +81,10 @@
     model: adv_lookml_thelook
     explore: order_items
     type: single_value
-    fields: [users.average_spend_per_customer, order_items.period]
+    fields: [users.average_spend_per_customer, order_items.previous_period]
     filters:
-      order_items.this_period_filter: 30 days
-    sorts: [order_items.period desc]
+      order_items.previous_period_filter: 30 days
+    sorts: [order_items.previous_period desc]
     limit: 500
     column_limit: 50
     dynamic_fields: [{table_calculation: change, label: "% Change", expression: "${users.average_spend_per_customer}\

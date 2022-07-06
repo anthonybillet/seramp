@@ -33,29 +33,32 @@ view: order_items {
     sql: ${TABLE}.created_at ;;
   }
 
-  filter: this_period_filter {
+  filter: previous_period_filter {
     type: date
-    description: "Use this filter to define the current and previous period for analysis"
-    sql: ${period} IS NOT NULL ;;
+    description: "Use this filter for period analysis"
   }
 
-  dimension: period {
+  dimension: previous_period {
+    label: "Previous Period"
     type: string
-    description: "The reporting period as selected by the This Period Filter"
+    description: "The reporting period as selected by the Previous Period Filter"
     sql:
-      CASE
-        WHEN {% date_start this_period_filter %} is not null AND {% date_end this_period_filter %} is not null /* date ranges or in the past x days */
-          THEN
+      {% if previous_period_filter._in_query %}
             CASE
-              WHEN ${created_raw} >= {% date_start this_period_filter %}
-                AND ${created_raw} <= {% date_end this_period_filter %}
+              WHEN (${created_raw} >=  {% date_start previous_period_filter %}
+                  AND ${created_raw}  <= {% date_end previous_period_filter %})
                 THEN 'This Period'
-              WHEN ${created_raw} >= date_add(day,-1*date_diff(day,{% date_start this_period_filter %}, {% date_end this_period_filter %} ) + 1, date_add(day,-1,{% date_start this_period_filter %} ) )
-                AND ${created_raw} <= date_add(day,-1,{% date_start this_period_filter %} ) + 1
+              WHEN (date(${created_raw})  >= DATE_SUB(DATE_SUB(date({% date_start previous_period_filter %}), INTERVAL 1 DAY )
+                                          , INTERVAL DATE_DIFF(date({% date_end previous_period_filter %}),
+                                          date({% date_start previous_period_filter %}), DAY ) + 1 DAY)
+                  AND date(${created_raw})  <= DATE_SUB(date({% date_start previous_period_filter %}), INTERVAL 1 DAY ))
                 THEN 'Previous Period'
-            END
-        END ;;
+              ELSE NULL END
+      {% else %} NULL {% endif %}
+      ;;
   }
+
+
 
   dimension_group: delivered {
     type: time
@@ -155,6 +158,7 @@ view: order_items {
     type: average
     #hidden: yes
     sql: ${sale_price} ;;
+    value_format_name: usd
   }
 
   measure: cumulative_total_sales {
@@ -211,6 +215,153 @@ view: order_items {
     value_format_name: percent_1
     sql: 1.0 * ${number_of_items_returned} / NULLIF(${count} ,0) ;;
     drill_fields: [detail*]
+  }
+
+  measure: total_users_selected_brand {
+    view_label: "Product Comparsion"
+    label: "Total Users - Selected Brand"
+    type: count_distinct
+    sql: ${user_id};;
+    filters: {
+      field: products.brand_comparison
+      value: "(1)%"
+    }
+    drill_fields: [detail*]
+  }
+
+  measure: total_users_other_brands {
+    view_label: "Product Comparsion"
+    label: "Total Users - Other Brands"
+    type: count_distinct
+    sql: ${user_id};;
+    filters: {
+      field: products.brand_comparison
+      value: "(2)%"
+    }
+  }
+
+  measure: total_orders_selected_brand {
+    view_label: "Product Comparsion"
+    label: "Total Orders - Selected Brand"
+    type: count
+
+    filters: {
+      field: products.brand_comparison
+      value: "(1)%"
+    }
+  }
+
+  measure: total_orders_other_brands {
+    view_label: "Product Comparsion"
+    label: "Total Orders - Other Brands"
+    type: count
+
+    filters: {
+      field: products.brand_comparison
+      value: "(2)%"
+    }
+  }
+
+  measure: total_sale_price_selected_brand {
+    view_label: "Product Comparsion"
+    label: "Total Sales - Selected Brand"
+    type: sum
+    value_format_name: usd
+    sql: ${sale_price} ;;
+
+    filters: {
+      field: products.brand_comparison
+      value: "(1)%"
+    }
+  }
+
+  measure: total_sale_price_other_brands {
+    view_label: "Product Comparsion"
+    label: "Total Sales - Other Brands"
+    type: sum
+    value_format_name: usd
+    sql: ${sale_price} ;;
+
+    filters: {
+      field: products.brand_comparison
+      value: "(2)%"
+    }
+  }
+
+  measure: total_sale_price_selected_category {
+    view_label: "Product Comparsion"
+    label: "Total Sales - Selected Category"
+    type: sum
+    value_format_name: usd
+    sql: ${sale_price} ;;
+
+    filters: {
+      field: products.category_comparison
+      value: "(1)%"
+    }
+  }
+
+  measure: total_sale_price_other_categories {
+    view_label: "Product Comparsion"
+    label: "Total Sales - Other Categories"
+    type: sum
+    value_format_name: usd
+    sql: ${order_items.sale_price} ;;
+
+    filters: {
+      field: products.category_comparison
+      value: "(2)%"
+    }
+  }
+
+  measure: total_users_selected_category {
+    view_label: "Product Comparsion"
+    label: "Total Users - Select Category"
+    type: count_distinct
+    sql: ${user_id};;
+
+    filters: {
+      field: products.category_comparison
+      value: "(1)%"
+    }
+  }
+
+  measure: total_users_other_categories {
+    view_label: "Product Comparsion"
+    label: "Total Users - Other Categories"
+    type: count_distinct
+    sql: ${user_id};;
+
+    filters: {
+      field: products.category_comparison
+      value: "(2)%"
+    }
+  }
+
+  measure: total_sale_price_similar_brand {
+    view_label: "Product Comparsion"
+    label: "Total Sales - Similar Brands"
+    type: sum
+    value_format_name: usd
+    sql: ${sale_price} ;;
+
+    filters: {
+      field: products.similar_categories_brands_comparison
+      value: "(1)%"
+    }
+  }
+
+  measure: total_sale_price_not_similar_brands {
+    view_label: "Product Comparsion"
+    label: "Total Sales - Not Similar Brands"
+    type: sum
+    value_format_name: usd
+    sql: ${sale_price} ;;
+
+    filters: {
+      field: products.similar_categories_brands_comparison
+      value: "(2)%"
+    }
   }
 
 

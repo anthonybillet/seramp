@@ -54,6 +54,8 @@ view: users {
       day_of_month,
       week,
       month,
+      month_name,
+      month_num,
       quarter,
       year
     ]
@@ -63,8 +65,10 @@ view: users {
   dimension: is_new {
     description: "user created in the last 90 days"
     type: yesno
-    sql: DATEDIFF('DAY', ${created_date}, CURRENT_DATE) < 91 ;;
+    sql: date_diff( CURRENT_DATE(), ${created_date}, day) < 91 ;;
   }
+
+  #DATE_DIFF(DATE '2010-07-07', DATE '2008-12-25', DAY) AS days_diff;
 
   dimension: email {
     type: string
@@ -132,6 +136,19 @@ view: users {
     sql: ${TABLE}.zip ;;
   }
 
+  dimension: months_since_signup {
+    view_label: "Order Items"
+    type: number
+    sql: date_diff(date( ${order_items.created_raw}), date(${created_raw}), month);;
+  }
+
+  dimension: days_since_signup {
+    view_label: "Order Items"
+    type: number
+    sql: date_diff(date( ${order_items.created_raw}), date(${created_raw}), day);;
+  }
+
+
   # A measure is a field that uses a SQL aggregate function. Here are count, sum, and average
   # measures for numeric dimensions, but you can also add measures of many different types.
   # Click on the type parameter to see all the options in the Quick Help panel on the right.
@@ -193,6 +210,20 @@ view: users {
     value_format_name: usd
     sql: 1.0 * ${order_items.total_sale_price}/ NULLIF(${count},0) ;;
   }
+
+  measure: average_number_of_days_since_signup {
+    view_label: "Order Items"
+    type: average
+    sql: ${days_since_signup} ;;
+  }
+
+  measure: average_number_of_months_since_signup {
+    view_label: "Order Items"
+    type: average
+    sql: ${months_since_signup} ;;
+  }
+
+
 
 
   # ----- Sets of fields for drilling ------
