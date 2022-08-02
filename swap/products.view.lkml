@@ -2,7 +2,7 @@
 view: products {
   # The sql_table_name parameter indicates the underlying database table
   # to be used for all fields in this view.
-  sql_table_name: "ECOMM"."PRODUCTS"
+  sql_table_name:  `looker-private-demo.thelook.products`
     ;;
   drill_fields: [id]
   # This primary key is the unique key for this table in the underlying database.
@@ -11,7 +11,7 @@ view: products {
   dimension: id {
     primary_key: yes
     type: number
-    sql: ${TABLE}."ID" ;;
+    sql: ${TABLE}.ID;;
   }
 
   # Here's what a typical dimension looks like in LookML.
@@ -20,43 +20,43 @@ view: products {
 
   dimension: brand {
     type: string
-    sql: ${TABLE}."BRAND" ;;
+    sql: ${TABLE}.BRAND;;
   }
 
   dimension: category {
     type: string
-    sql: ${TABLE}."CATEGORY" ;;
+    sql: ${TABLE}.CATEGORY;;
   }
 
   dimension: cost {
     type: number
-    sql: ${TABLE}."COST" ;;
+    sql: ${TABLE}.COST;;
   }
 
   dimension: department {
     type: string
-    sql: ${TABLE}."DEPARTMENT" ;;
+    sql: ${TABLE}.DEPARTMENT;;
   }
 
   dimension: distribution_center_id {
     type: number
     # hidden: yes
-    sql: ${TABLE}."DISTRIBUTION_CENTER_ID" ;;
+    sql: ${TABLE}.DISTRIBUTION_CENTER_ID;;
   }
 
   dimension: name {
     type: string
-    sql: ${TABLE}."NAME" ;;
+    sql: ${TABLE}.NAME;;
   }
 
   dimension: retail_price {
     type: number
-    sql: ${TABLE}."RETAIL_PRICE" ;;
+    sql: ${TABLE}.RETAIL_PRICE;;
   }
 
   dimension: sku {
     type: string
-    sql: ${TABLE}."SKU" ;;
+    sql: ${TABLE}.SKU;;
   }
 
   # A measure is a field that uses a SQL aggregate function. Here are count, sum, and average

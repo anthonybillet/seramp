@@ -2,7 +2,7 @@
 view: users {
   # The sql_table_name parameter indicates the underlying database table
   # to be used for all fields in this view.
-  sql_table_name: "ECOMM"."USERS"
+  sql_table_name: `looker-private-demo.thelook.users`
     ;;
   drill_fields: [id]
   # This primary key is the unique key for this table in the underlying database.
@@ -11,7 +11,7 @@ view: users {
   dimension: id {
     primary_key: yes
     type: number
-    sql: ${TABLE}."ID" ;;
+    sql: ${TABLE}.ID;;
   }
 
   # Here's what a typical dimension looks like in LookML.
@@ -20,18 +20,18 @@ view: users {
 
   dimension: age {
     type: number
-    sql: ${TABLE}."AGE" ;;
+    sql: ${TABLE}.AGE;;
   }
 
   dimension: city {
     type: string
-    sql: ${TABLE}."CITY" ;;
+    sql: ${TABLE}.CITY;;
   }
 
   dimension: country {
     type: string
     map_layer_name: countries
-    sql: ${TABLE}."COUNTRY" ;;
+    sql: ${TABLE}.COUNTRY;;
   }
 
   # Dates and timestamps can be represented in Looker using a dimension group of type: time.
@@ -48,37 +48,37 @@ view: users {
       quarter,
       year
     ]
-    sql: ${TABLE}."CREATED_AT" ;;
+    sql: ${TABLE}.CREATED_AT;;
   }
 
   dimension: email {
     type: string
-    sql: ${TABLE}."EMAIL" ;;
+    sql: ${TABLE}.EMAIL;;
   }
 
   dimension: first_name {
     type: string
-    sql: ${TABLE}."FIRST_NAME" ;;
+    sql: ${TABLE}.FIRST_NAME;;
   }
 
   dimension: gender {
     type: string
-    sql: ${TABLE}."GENDER" ;;
+    sql: ${TABLE}.GENDER;;
   }
 
   dimension: last_name {
     type: string
-    sql: ${TABLE}."LAST_NAME" ;;
+    sql: ${TABLE}.LAST_NAME;;
   }
 
   dimension: latitude {
     type: number
-    sql: ${TABLE}."LATITUDE" ;;
+    sql: ${TABLE}.LATITUDE;;
   }
 
   dimension: longitude {
     type: number
-    sql: ${TABLE}."LONGITUDE" ;;
+    sql: ${TABLE}.LONGITUDE;;
   }
 
   dimension: location {
@@ -96,17 +96,17 @@ view: users {
 
   dimension: state {
     type: string
-    sql: ${TABLE}."STATE" ;;
+    sql: ${TABLE}.STATE;;
   }
 
   dimension: traffic_source {
     type: string
-    sql: ${TABLE}."TRAFFIC_SOURCE" ;;
+    sql: ${TABLE}.TRAFFIC_SOURCE;;
   }
 
   dimension: zip {
     type: zipcode
-    sql: ${TABLE}."ZIP" ;;
+    sql: ${TABLE}.ZIP;;
   }
 
   # A measure is a field that uses a SQL aggregate function. Here are count, sum, and average

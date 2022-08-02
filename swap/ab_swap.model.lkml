@@ -1,4 +1,4 @@
-connection: "snowflake"
+connection: "looker-private-demo"
 
 include: "/swap/*.view.lkml"
 

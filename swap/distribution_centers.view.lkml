@@ -2,7 +2,7 @@
 view: distribution_centers {
   # The sql_table_name parameter indicates the underlying database table
   # to be used for all fields in this view.
-  sql_table_name: "ECOMM"."DISTRIBUTION_CENTERS"
+  sql_table_name: `looker-private-demo.thelook.distribution_centers`
     ;;
   drill_fields: [id]
   # This primary key is the unique key for this table in the underlying database.
@@ -11,7 +11,7 @@ view: distribution_centers {
   dimension: id {
     primary_key: yes
     type: number
-    sql: ${TABLE}."ID" ;;
+    sql: ${TABLE}.ID;;
   }
 
   # Here's what a typical dimension looks like in LookML.
@@ -20,12 +20,12 @@ view: distribution_centers {
 
   dimension: latitude {
     type: number
-    sql: ${TABLE}."LATITUDE" ;;
+    sql: ${TABLE}.LATITUDE;;
   }
 
   dimension: longitude {
     type: number
-    sql: ${TABLE}."LONGITUDE" ;;
+    sql: ${TABLE}.LONGITUDE;;
   }
 
   dimension: location {
@@ -36,7 +36,7 @@ view: distribution_centers {
 
   dimension: name {
     type: string
-    sql: ${TABLE}."NAME" ;;
+    sql: ${TABLE}.NAME;;
   }
 
   # A measure is a field that uses a SQL aggregate function. Here are count, sum, and average

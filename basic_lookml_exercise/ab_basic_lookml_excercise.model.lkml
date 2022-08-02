@@ -13,6 +13,12 @@ datagroup: 4_hr_cache {
 explore: order_items {
   persist_with: 4_hr_cache
 
+  #include this for the admin exercise part of exit module Advanced LookML/Admin Test
+  # access_filter: {
+  #   user_attribute: brand
+  #   field: products.brand
+  # }
+
   always_filter: {
     filters: [order_items.created_date: "last 30 days"]
   }
