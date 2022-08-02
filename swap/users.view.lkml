@@ -1,3 +1,8 @@
+access_grant: can_see_pii {
+  user_attribute: can_see_pii
+  allowed_values: ["Yes"]
+}
+
 # The name of this view in Looker is "Users"
 view: users {
   # The sql_table_name parameter indicates the underlying database table
@@ -52,11 +57,13 @@ view: users {
   }
 
   dimension: email {
+    required_access_grants: [can_see_pii]
     type: string
     sql: ${TABLE}.EMAIL;;
   }
 
   dimension: first_name {
+    required_access_grants: [can_see_pii]
     type: string
     sql: ${TABLE}.FIRST_NAME;;
   }
@@ -67,6 +74,7 @@ view: users {
   }
 
   dimension: last_name {
+    required_access_grants: [can_see_pii]
     type: string
     sql: ${TABLE}.LAST_NAME;;
   }
