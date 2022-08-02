@@ -6,6 +6,10 @@ explore: order_items {
   label: "(1) Orders, Items and Users"
   view_name: order_items
 
+  always_filter: {
+    filters: [users.created_date: "Last 30 days"]
+  }
+
   access_filter: {
     field: products.brand
     user_attribute: brand
