@@ -1,10 +1,14 @@
-connection: "snowflake"
+connection: "looker-private-demo"
 
 include: "/swap/*.view.lkml"
 
 explore: order_items {
   label: "(1) Orders, Items and Users"
   view_name: order_items
+
+  always_filter: {
+    filters: [users.created_date: "Last 30 days"]
+  }
 
   access_filter: {
     field: products.brand

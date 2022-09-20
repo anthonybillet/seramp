@@ -1,13 +1,8 @@
-access_grant: can_see_pii {
-  user_attribute: can_see_pii
-  allowed_values: ["Yes"]
-}
-
-# The name of this view in Looker is "Users"
-view: users {
+# The name of this view in Looker is "Events"
+view: events {
   # The sql_table_name parameter indicates the underlying database table
   # to be used for all fields in this view.
-  sql_table_name: `looker-private-demo.thelook.users`
+  sql_table_name: `looker-private-demo.thelook.events`
     ;;
   drill_fields: [id]
   # This primary key is the unique key for this table in the underlying database.
@@ -16,27 +11,27 @@ view: users {
   dimension: id {
     primary_key: yes
     type: number
-    sql: ${TABLE}.ID;;
+    sql: ${TABLE}.id ;;
   }
 
   # Here's what a typical dimension looks like in LookML.
   # A dimension is a groupable field that can be used to filter query results.
-  # This dimension will be called "Age" in Explore.
+  # This dimension will be called "Browser" in Explore.
 
-  dimension: age {
-    type: number
-    sql: ${TABLE}.AGE;;
+  dimension: browser {
+    type: string
+    sql: ${TABLE}.browser ;;
   }
 
   dimension: city {
     type: string
-    sql: ${TABLE}.CITY;;
+    sql: ${TABLE}.city ;;
   }
 
   dimension: country {
     type: string
     map_layer_name: countries
-    sql: ${TABLE}.COUNTRY;;
+    sql: ${TABLE}.country ;;
   }
 
   # Dates and timestamps can be represented in Looker using a dimension group of type: time.
@@ -53,68 +48,68 @@ view: users {
       quarter,
       year
     ]
-    sql: ${TABLE}.CREATED_AT;;
+    sql: ${TABLE}.created_at ;;
   }
 
-  dimension: email {
-    required_access_grants: [can_see_pii]
+  dimension: event_type {
     type: string
-    sql: ${TABLE}.EMAIL;;
+    sql: ${TABLE}.event_type ;;
   }
 
-  dimension: first_name {
-    required_access_grants: [can_see_pii]
+  dimension: ip_address {
     type: string
-    sql: ${TABLE}.FIRST_NAME;;
-  }
-
-  dimension: gender {
-    type: string
-    sql: ${TABLE}.GENDER;;
-  }
-
-  dimension: last_name {
-    required_access_grants: [can_see_pii]
-    type: string
-    sql: ${TABLE}.LAST_NAME;;
+    sql: ${TABLE}.ip_address ;;
   }
 
   dimension: latitude {
     type: number
-    sql: ${TABLE}.LATITUDE;;
+    sql: ${TABLE}.latitude ;;
   }
 
   dimension: longitude {
     type: number
-    sql: ${TABLE}.LONGITUDE;;
+    sql: ${TABLE}.longitude ;;
   }
 
-  dimension: location {
-    type: location
-    sql_latitude: ${latitude} ;;
-    sql_longitude: ${longitude} ;;
+  dimension: os {
+    type: string
+    sql: ${TABLE}.os ;;
   }
 
-  dimension: distance_from_distribution_center {
-    type: distance
-    start_location_field: distribution_centers.location
-    end_location_field: location
-    units: miles
+  dimension: sequence_number {
+    type: number
+    sql: ${TABLE}.sequence_number ;;
+  }
+
+  dimension: session_id {
+    type: string
+    sql: ${TABLE}.session_id ;;
   }
 
   dimension: state {
     type: string
-    sql: ${TABLE}.STATE;;
+    sql: ${TABLE}.state ;;
   }
 
   dimension: traffic_source {
     type: string
-    sql: ${TABLE}.TRAFFIC_SOURCE;;
+    sql: ${TABLE}.traffic_source ;;
+  }
+
+  dimension: uri {
+    type: string
+    sql: ${TABLE}.uri ;;
+  }
+
+  dimension: user_id {
+    type: number
+    # hidden: yes
+    sql: ${TABLE}.user_id ;;
   }
 
   dimension: zip {
     type: zipcode
-    sql: ${TABLE}.ZIP;;
+    sql: ${TABLE}.zip ;;
   }
 
   # A measure is a field that uses a SQL aggregate function. Here are count, sum, and average
@@ -123,23 +118,11 @@ view: users {
 
   measure: count {
     type: count
-    drill_fields: [id, last_name, first_name, order_items.count]
+    drill_fields: [id, users.last_name, users.id, users.first_name]
   }
 
   # These sum and average measures are hidden by default.
   # If you want them to show up in your explore, remove hidden: yes.
-
-  measure: total_age {
-    type: sum
-    hidden: yes
-    sql: ${age} ;;
-  }
-
-  measure: average_age {
-    type: average
-    hidden: yes
-    sql: ${age} ;;
-  }
 
   measure: total_latitude {
     type: sum
@@ -163,5 +146,17 @@ view: users {
     type: average
     hidden: yes
     sql: ${longitude} ;;
+  }
+
+  measure: total_sequence_number {
+    type: sum
+    hidden: yes
+    sql: ${sequence_number} ;;
+  }
+
+  measure: average_sequence_number {
+    type: average
+    hidden: yes
+    sql: ${sequence_number} ;;
   }
 }

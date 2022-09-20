@@ -1,8 +1,8 @@
-# The name of this view in Looker is "Products"
-view: products {
+# The name of this view in Looker is "Distribution Centers"
+view: distribution_centers {
   # The sql_table_name parameter indicates the underlying database table
   # to be used for all fields in this view.
-  sql_table_name:  `looker-private-demo.thelook.products`
+  sql_table_name: `looker-private-demo.thelook.distribution_centers`
     ;;
   drill_fields: [id]
   # This primary key is the unique key for this table in the underlying database.
@@ -11,52 +11,26 @@ view: products {
   dimension: id {
     primary_key: yes
     type: number
-    sql: ${TABLE}.ID;;
+    sql: ${TABLE}.id ;;
   }
 
   # Here's what a typical dimension looks like in LookML.
   # A dimension is a groupable field that can be used to filter query results.
-  # This dimension will be called "Brand" in Explore.
+  # This dimension will be called "Latitude" in Explore.
 
-  dimension: brand {
-    type: string
-    sql: ${TABLE}.BRAND;;
-  }
-
-  dimension: category {
-    type: string
-    sql: ${TABLE}.CATEGORY;;
-  }
-
-  dimension: cost {
+  dimension: latitude {
     type: number
-    sql: ${TABLE}.COST;;
+    sql: ${TABLE}.latitude ;;
   }
 
-  dimension: department {
-    type: string
-    sql: ${TABLE}.DEPARTMENT;;
-  }
-
-  dimension: distribution_center_id {
+  dimension: longitude {
     type: number
-    # hidden: yes
-    sql: ${TABLE}.DISTRIBUTION_CENTER_ID;;
+    sql: ${TABLE}.longitude ;;
   }
 
   dimension: name {
     type: string
-    sql: ${TABLE}.NAME;;
-  }
-
-  dimension: retail_price {
-    type: number
-    sql: ${TABLE}.RETAIL_PRICE;;
-  }
-
-  dimension: sku {
-    type: string
-    sql: ${TABLE}.SKU;;
+    sql: ${TABLE}.name ;;
   }
 
   # A measure is a field that uses a SQL aggregate function. Here are count, sum, and average
@@ -65,33 +39,33 @@ view: products {
 
   measure: count {
     type: count
-    drill_fields: [id, name, distribution_centers.id, distribution_centers.name, inventory_items.count]
+    drill_fields: [id, name, products.count]
   }
 
   # These sum and average measures are hidden by default.
   # If you want them to show up in your explore, remove hidden: yes.
 
-  measure: total_cost {
+  measure: total_latitude {
     type: sum
     hidden: yes
-    sql: ${cost} ;;
+    sql: ${latitude} ;;
   }
 
-  measure: average_cost {
+  measure: average_latitude {
     type: average
     hidden: yes
-    sql: ${cost} ;;
+    sql: ${latitude} ;;
   }
 
-  measure: total_retail_price {
+  measure: total_longitude {
     type: sum
     hidden: yes
-    sql: ${retail_price} ;;
+    sql: ${longitude} ;;
   }
 
-  measure: average_retail_price {
+  measure: average_longitude {
     type: average
     hidden: yes
-    sql: ${retail_price} ;;
+    sql: ${longitude} ;;
   }
 }

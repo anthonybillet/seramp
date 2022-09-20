@@ -11,7 +11,7 @@ view: inventory_items {
   dimension: id {
     primary_key: yes
     type: number
-    sql: ${TABLE}.ID;;
+    sql: ${TABLE}.id ;;
   }
 
   # Here's what a typical dimension looks like in LookML.
@@ -20,7 +20,7 @@ view: inventory_items {
 
   dimension: cost {
     type: number
-    sql: ${TABLE}.COST;;
+    sql: ${TABLE}.cost ;;
   }
 
   # Dates and timestamps can be represented in Looker using a dimension group of type: time.
@@ -30,55 +30,56 @@ view: inventory_items {
     type: time
     timeframes: [
       raw,
-      time,
       date,
       week,
       month,
       quarter,
       year
     ]
-    sql: ${TABLE}.CREATED_AT;;
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.created_at ;;
   }
 
   dimension: product_brand {
     type: string
-    sql: ${TABLE}.PRODUCT_BRAND;;
+    sql: ${TABLE}.product_brand ;;
   }
 
   dimension: product_category {
     type: string
-    sql: ${TABLE}.PRODUCT_CATEGORY;;
+    sql: ${TABLE}.product_category ;;
   }
 
   dimension: product_department {
     type: string
-    sql: ${TABLE}.PRODUCT_DEPARTMENT;;
+    sql: ${TABLE}.product_department ;;
   }
 
   dimension: product_distribution_center_id {
     type: number
-    sql: ${TABLE}.PRODUCT_DISTRIBUTION_CENTER_ID;;
+    sql: ${TABLE}.product_distribution_center_id ;;
   }
 
   dimension: product_id {
     type: number
     # hidden: yes
-    sql: ${TABLE}.PRODUCT_ID;;
+    sql: ${TABLE}.product_id ;;
   }
 
   dimension: product_name {
     type: string
-    sql: ${TABLE}.PRODUCT_NAME;;
+    sql: ${TABLE}.product_name ;;
   }
 
   dimension: product_retail_price {
     type: number
-    sql: ${TABLE}.PRODUCT_RETAIL_PRICE;;
+    sql: ${TABLE}.product_retail_price ;;
   }
 
   dimension: product_sku {
     type: string
-    sql: ${TABLE}.PRODUCT_SKU;;
+    sql: ${TABLE}.product_sku ;;
   }
 
   dimension_group: sold {
@@ -92,7 +93,7 @@ view: inventory_items {
       quarter,
       year
     ]
-    sql: ${TABLE}.SOLD_AT;;
+    sql: ${TABLE}.sold_at ;;
   }
 
   # A measure is a field that uses a SQL aggregate function. Here are count, sum, and average
@@ -109,25 +110,22 @@ view: inventory_items {
 
   measure: total_cost {
     type: sum
-    hidden: yes
+
     sql: ${cost} ;;
   }
 
   measure: average_cost {
     type: average
-    hidden: yes
     sql: ${cost} ;;
   }
 
   measure: total_product_retail_price {
     type: sum
-    hidden: yes
     sql: ${product_retail_price} ;;
   }
 
   measure: average_product_retail_price {
     type: average
-    hidden: yes
     sql: ${product_retail_price} ;;
   }
 }

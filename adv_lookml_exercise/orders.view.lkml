@@ -1,17 +1,17 @@
-# The name of this view in Looker is "Order Items"
-view: order_items {
+# The name of this view in Looker is "Orders"
+view: orders {
   # The sql_table_name parameter indicates the underlying database table
   # to be used for all fields in this view.
-  sql_table_name: `looker-private-demo.thelook.order_items`
+  sql_table_name: `looker-private-demo.thelook.orders`
     ;;
-  drill_fields: [id]
+  drill_fields: [order_id]
   # This primary key is the unique key for this table in the underlying database.
   # You need to define a primary key in a view in order to join to other views.
 
-  dimension: id {
+  dimension: order_id {
     primary_key: yes
     type: number
-    sql: ${TABLE}.ID;;
+    sql: ${TABLE}.order_id ;;
   }
 
   # Dates and timestamps can be represented in Looker using a dimension group of type: time.
@@ -28,7 +28,7 @@ view: order_items {
       quarter,
       year
     ]
-    sql: ${TABLE}.CREATED_AT;;
+    sql: ${TABLE}.created_at ;;
   }
 
   dimension_group: delivered {
@@ -42,22 +42,21 @@ view: order_items {
       quarter,
       year
     ]
-    sql: ${TABLE}.DELIVERED_AT;;
+    sql: ${TABLE}.delivered_at ;;
   }
 
   # Here's what a typical dimension looks like in LookML.
   # A dimension is a groupable field that can be used to filter query results.
-  # This dimension will be called "Inventory Item ID" in Explore.
+  # This dimension will be called "Gender" in Explore.
 
-  dimension: inventory_item_id {
-    type: number
-    # hidden: yes
-    sql: ${TABLE}.INVENTORY_ITEM_ID;;
+  dimension: gender {
+    type: string
+    sql: ${TABLE}.gender ;;
   }
 
-  dimension: order_id {
+  dimension: num_of_item {
     type: number
-    sql: ${TABLE}.ORDER_ID;;
+    sql: ${TABLE}.num_of_item ;;
   }
 
   dimension_group: returned {
@@ -71,13 +70,7 @@ view: order_items {
       quarter,
       year
     ]
-    sql: ${TABLE}.RETURNED_AT;;
-  }
-
-  dimension: sale_price {
-    type: number
-    sql: ${TABLE}.SALE_PRICE;;
-    value_format_name: usd
+    sql: ${TABLE}.returned_at ;;
   }
 
   dimension_group: shipped {
@@ -91,31 +84,18 @@ view: order_items {
       quarter,
       year
     ]
-    sql: ${TABLE}.SHIPPED_AT;;
+    sql: ${TABLE}.shipped_at ;;
   }
 
   dimension: status {
     type: string
-    sql: ${TABLE}.STATUS;;
+    sql: ${TABLE}.status ;;
   }
 
   dimension: user_id {
     type: number
     # hidden: yes
-    sql: ${TABLE}.USER_ID;;
-  }
-
-  #easy cohorting, assumes they already track signup date
-  dimension_group: since_signup {
-    type: duration
-    sql_start: ${users.created_raw} ;;
-    sql_end: ${created_raw} ;;
-  }
-
-  dimension: gross_margin {
-    type: number
-    sql: ${sale_price} - ${inventory_items.cost} ;;
-    value_format_name: usd
+    sql: ${TABLE}.user_id ;;
   }
 
   # A measure is a field that uses a SQL aggregate function. Here are count, sum, and average
@@ -124,42 +104,21 @@ view: order_items {
 
   measure: count {
     type: count
-    drill_fields: [detail*]
+    drill_fields: [order_id, users.last_name, users.id, users.first_name, order_items.count]
   }
 
-  measure: total_sale_price {
+  # These sum and average measures are hidden by default.
+  # If you want them to show up in your explore, remove hidden: yes.
+
+  measure: total_num_of_item {
     type: sum
-    sql: ${sale_price} ;;
-    value_format_name: usd
+    hidden: yes
+    sql: ${num_of_item} ;;
   }
 
-  measure: total_gross_margin {
-    type: sum
-    sql: ${gross_margin} ;;
-    value_format_name: usd
-  }
-
-  measure: count_orders {
-    label: "# of Orders"
-    type: count_distinct
-    sql: ${order_id} ;;
-  }
-
-  measure: first_order_time {
-    type: date_time
-    sql: MIN(${created_raw}) ;;
-  }
-
-
-  # ----- Sets of fields for drilling ------
-  set: detail {
-    fields: [
-      id,
-      users.id,
-      users.last_name,
-      users.first_name,
-      inventory_items.id,
-      inventory_items.product_name
-    ]
+  measure: average_num_of_item {
+    type: average
+    hidden: yes
+    sql: ${num_of_item} ;;
   }
 }
