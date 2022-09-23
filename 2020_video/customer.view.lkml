@@ -46,16 +46,19 @@ view: customer {
   }
 
   dimension: email {
+    required_access_grants: [can_see_pii]
     type: string
     sql: ${TABLE}.email ;;
   }
 
   dimension: first_name {
+    required_access_grants: [can_see_pii]
     type: string
     sql: ${TABLE}.first_name ;;
   }
 
   dimension: last_name {
+    required_access_grants: [can_see_pii]
     type: string
     sql: ${TABLE}.last_name ;;
   }

@@ -2,6 +2,11 @@ connection: "looker-private-demo"
 
 include: "/2020_video/*.view.lkml"
 
+access_grant: can_see_pii {
+  user_attribute: can_see_pii
+  allowed_values: ["Yes"]
+}
+
 explore: rental {
   # access_filter: {
   #   user_attribute: store_id
