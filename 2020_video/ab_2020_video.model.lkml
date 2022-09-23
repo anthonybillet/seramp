@@ -3,6 +3,11 @@ connection: "looker-private-demo"
 include: "/2020_video/*.view.lkml"
 
 explore: rental {
+  # access_filter: {
+  #   user_attribute: store_id
+  #   field: customer.store_id
+  # }
+
   join: inventory {
     relationship: many_to_one
     sql_on: ${rental.inventory_id}=${inventory.inventory_id} ;;
@@ -33,5 +38,10 @@ explore: rental {
     relationship: one_to_one
     type: left_outer
     sql_on: ${rental.rental_id} = ${payment.rental_id} ;;
+  }
+  join: store {
+    type: left_outer
+    sql_on: ${customer.store_id} = ${store.store_id} ;;
+    relationship: many_to_one
   }
 }
