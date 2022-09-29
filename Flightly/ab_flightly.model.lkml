@@ -1,9 +1,11 @@
 connection: "looker-private-demo"
+label: "Z) Admin"
 
 include: "/Flightly/*.view.lkml"
 
 
 explore: flights {
+  label: "Ab Flights"
 
   sql_always_where: ${arr_year} BETWEEN 2000 and 2001 ;;
 

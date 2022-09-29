@@ -1,4 +1,5 @@
 connection: "looker-private-demo"
+label: "Z) Admin"
 
 include: "/2020_video/*.view.lkml"
 
@@ -8,6 +9,7 @@ access_grant: can_see_pii {
 }
 
 explore: rental {
+  label: "Ab Rental"
   # access_filter: {
   #   user_attribute: store_id
   #   field: customer.store_id

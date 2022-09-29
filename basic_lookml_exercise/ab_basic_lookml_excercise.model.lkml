@@ -6,11 +6,12 @@ include: "/basic_lookml_exercise/*.view.lkml"
 datagroup: 4_hr_cache {
   max_cache_age: "4 hours"
 }
-
+label: "Z) Admin"
 
 #An Explore that is cached for 4 hours
 #An Explore that uses the ‘always_filter’ parameter
 explore: order_items {
+  label: "Ab Order Items Basic"
   persist_with: 4_hr_cache
 
   #include this for the admin exercise part of exit module Advanced LookML/Admin Test
@@ -48,11 +49,14 @@ explore: order_items {
 
 # An Explore that uses the ‘sql_always_where’ parameter
 explore: users {
+  label: "AB Users Basic"
+
   sql_always_where: ${created_date} >= '2020-01-01' ;;
   description: "Investigate demographic counts"
 }
 
 explore: inventory_items {
+  label: "AB Inventory Items Basic"
   #A join that is an INNER join
   join: products {
     type: inner

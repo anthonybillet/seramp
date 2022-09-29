@@ -2,9 +2,10 @@ connection: "looker-private-demo"
 include: "/adv_lookml_exercise/*.view.lkml"
 include: "/adv_lookml_exercise/*.dashboard.lookml"
 include: "/adv_lookml_exercise/customer_behavior_dashboard.dashboard.lookml"
-
+label: "Z) Admin"
 
 explore: order_items {
+  label: "Ab Order Items Advanced"
 
   join: inventory_items {
     type: full_outer

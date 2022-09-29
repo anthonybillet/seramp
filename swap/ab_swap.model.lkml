@@ -1,9 +1,10 @@
 connection: "looker-private-demo"
-
+label: "Z) Admin"
 include: "/swap/*.view.lkml"
 
 explore: order_items {
-  label: "(1) Orders, Items and Users"
+
+  label: "AB (1) Orders, Items and Users"
   view_name: order_items
 
   always_filter: {
