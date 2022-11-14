@@ -10,7 +10,7 @@ explore: order_items {
   label: "Basic SQL: Ecomm"
   view_label: "Order Items"
   view_name: order_items
-  fields: [id,order_id,sale_price,inventory_item_id,returned_at]
+  fields: [orders*,inventory_items*, users*, products*, order_items.id,order_items.order_id,order_items.sale_price,order_items.inventory_item_id,order_items.returned_at]
 
   join: orders {
     view_label: "Orders"
