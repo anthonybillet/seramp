@@ -30,7 +30,7 @@ explore: order_items {
     view_label: "Users"
     type: left_outer
     relationship: many_to_one
-    sql_on: ${order_items.user_id} = ${users.id} ;;
+    sql_on: ${orders.user_id} = ${users.id} ;;
   }
 
   join: products {
