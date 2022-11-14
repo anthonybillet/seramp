@@ -14,18 +14,8 @@ view: inventory_items {
     sql: ${TABLE}.cost ;;
   }
 
-  dimension_group: created {
-    type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    convert_tz: no
-    datatype: date
+  dimension: created_at {
+    type: date
     sql: ${TABLE}.created_at ;;
   }
 
@@ -70,17 +60,8 @@ view: inventory_items {
     sql: ${TABLE}.product_sku ;;
   }
 
-  dimension_group: sold {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+  dimension: sold_at {
+    type: date
     sql: ${TABLE}.sold_at ;;
   }
 

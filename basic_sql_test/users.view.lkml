@@ -25,17 +25,8 @@ view: users {
     sql: ${TABLE}.country ;;
   }
 
-  dimension_group: created {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+  dimension: created_at {
+    type: date
     sql: ${TABLE}.created_at ;;
   }
 

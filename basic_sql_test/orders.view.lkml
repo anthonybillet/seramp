@@ -9,17 +9,8 @@ view: orders {
     sql: ${TABLE}.order_id ;;
   }
 
-  dimension_group: created {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+  dimension: created_at {
+    type: date
     sql: ${TABLE}.created_at ;;
   }
 

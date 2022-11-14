@@ -50,17 +50,8 @@ view: order_items {
     sql: ${TABLE}.order_id ;;
   }
 
-  dimension_group: returned {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
+  dimension: returned_at {
+    type: date
     sql: ${TABLE}.returned_at ;;
   }
 
