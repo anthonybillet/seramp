@@ -38,7 +38,7 @@ explore: order_items {
 
   join: products {
     view_label: "Products"
-    fields: [products.id, products.category,products.name, products.retail_price, products.department, products.sku]
+    fields: [products.id, products.category,products.name, products.retail_price, products.department, products.sku, products.brand]
     type: left_outer
     relationship: many_to_one
     sql_on: ${products.id} = ${inventory_items.product_id} ;;
