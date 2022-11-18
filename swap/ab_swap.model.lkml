@@ -8,7 +8,7 @@ explore: order_items {
   view_name: order_items
 
   always_filter: {
-    filters: [users.created_date: "Last 30 days"]
+    filters: [order_items.created_date: "Last 30 days"]
   }
 
   access_filter: {
@@ -44,7 +44,7 @@ explore: order_items {
   join: user_facts {
     view_label: "Users"
     type: left_outer
-    relationship: many_to_one
-    sql_on: ${order_items.user_id} = ${users.id} ;;
+    relationship: one_to_one
+    sql_on: ${user_facts.id} = ${users.id} ;;
   }
 }

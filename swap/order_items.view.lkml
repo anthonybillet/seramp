@@ -111,6 +111,12 @@ view: order_items {
     sql_start: ${users.created_raw} ;;
     sql_end: ${created_raw} ;;
   }
+   #more difficult cohorting, requires a derived table/subquery
+  dimension_group: since_first_order {
+    type: duration
+    sql_start: ${user_facts.first_order_raw} ;;
+    sql_end: ${created_raw} ;;
+  }
 
   dimension: gross_margin {
     type: number
