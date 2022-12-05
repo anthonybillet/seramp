@@ -10,10 +10,10 @@ access_grant: can_see_pii {
 
 explore: rental {
   label: "Ab Rental"
-  # access_filter: {
-  #   user_attribute: store_id
-  #   field: customer.store_id
-  # }
+  access_filter: {
+    user_attribute: store_id_mentor_proj
+    field: customer.store_id
+  }
 
   join: inventory {
     relationship: many_to_one
