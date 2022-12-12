@@ -2,6 +2,8 @@
   title: Business Pulse
   layout: newspaper
   preferred_viewer: dashboards-next
+  description: ''
+  preferred_slug: lIWJx3Elv5jOiYvbekt1I1
   elements:
   - title: ''
     name: ''
@@ -39,7 +41,7 @@
     listen:
       City: users.city
       Traffic Source: users.traffic_source
-    row: 8
+    row: 1
     col: 0
     width: 5
     height: 4
@@ -72,7 +74,7 @@
     listen:
       City: users.city
       Traffic Source: users.traffic_source
-    row: 8
+    row: 1
     col: 5
     width: 7
     height: 4
@@ -105,12 +107,12 @@
     listen:
       City: users.city
       Traffic Source: users.traffic_source
-    row: 8
+    row: 1
     col: 16
     width: 8
     height: 4
-  - title: Yearly Revenue
-    name: Yearly Revenue
+  - title: Yearly Trends
+    name: Yearly Trends
     model: adv_lookml_thelook
     explore: order_items
     type: looker_line
@@ -118,8 +120,9 @@
     pivots: [order_items.created_year]
     fill_fields: [order_items.created_year, order_items.created_month_num]
     filters:
-      order_items.created_date: before 0 days ago
+      order_items.created_date: before 0 months ago
       order_items.created_year: 4 years
+    sorts: [order_items.created_year, order_items.total_gross_revenue desc 0]
     limit: 500
     query_timezone: America/Los_Angeles
     x_axis_gridlines: false
@@ -158,21 +161,21 @@
     listen:
       City: users.city
       Traffic Source: users.traffic_source
-    row: 12
+    row: 5
     col: 0
     width: 12
     height: 9
-  - title: Monthly Gross Margin and Revenue
-    name: Monthly Gross Margin and Revenue
+  - title: Monthly Revenue and Profit Last 12 Months
+    name: Monthly Revenue and Profit Last 12 Months
     model: adv_lookml_thelook
     explore: order_items
-    type: looker_area
+    type: looker_column
     fields: [order_items.total_gross_revenue, order_items.total_gross_margin_amount,
       order_items.created_month]
     fill_fields: [order_items.created_month]
     filters:
       order_items.created_date: 12 months
-    sorts: [order_items.created_month desc]
+    sorts: [order_items.created_month]
     limit: 500
     query_timezone: America/Los_Angeles
     x_axis_gridlines: false
@@ -193,12 +196,12 @@
     limit_displayed_rows: false
     legend_position: center
     point_style: circle_outline
-    show_value_labels: false
+    show_value_labels: true
     label_density: 25
-    x_axis_scale: auto
+    x_axis_scale: time
     y_axis_combined: true
-    show_null_points: true
-    interpolation: linear
+    ordering: none
+    show_null_labels: false
     show_totals_labels: false
     show_silhouette: false
     totals_color: "#808080"
@@ -207,20 +210,23 @@
             id: order_items.total_gross_margin_amount, name: Total Gross Margin Amount}],
         showLabels: true, showValues: true, valueFormat: '0, "K"', unpinAxis: false,
         tickDensity: default, tickDensityCustom: 5, type: linear}]
-    x_axis_label: Month of Year
+    x_axis_label: ''
+    x_axis_zoom: true
+    y_axis_zoom: true
+    label_value_format: '[>=1000000]$0.00,,"M";[>=1000]$0,"K";$0'
     series_types: {}
-    ordering: none
-    show_null_labels: false
+    show_null_points: true
+    interpolation: linear
     defaults_version: 1
     listen:
       City: users.city
       Traffic Source: users.traffic_source
-    row: 34
-    col: 0
+    row: 5
+    col: 12
     width: 12
-    height: 7
-  - title: New Users MoM
-    name: New Users MoM
+    height: 9
+  - title: 'Daily User Additions (This Month vs Last Month) '
+    name: 'Daily User Additions (This Month vs Last Month) '
     model: adv_lookml_thelook
     explore: order_items
     type: looker_line
@@ -230,7 +236,7 @@
     filters:
       users.created_date: before 0 days ago
       users.created_month: 2 months
-    sorts: [users.created_month 0, users.created_day_of_month]
+    sorts: [users.created_month desc, users.created_day_of_month]
     limit: 500
     column_limit: 50
     x_axis_gridlines: false
@@ -250,19 +256,28 @@
     stacking: ''
     limit_displayed_rows: false
     legend_position: center
-    point_style: circle_outline
+    point_style: circle
     show_value_labels: false
     label_density: 25
     x_axis_scale: auto
     y_axis_combined: true
     show_null_points: false
-    interpolation: linear
+    interpolation: monotone
     y_axes: [{label: '', orientation: left, series: [{axisId: users.count, id: 2020-04
-              - users.count, name: 2020-04}, {axisId: users.count, id: 2020-05
-              - users.count, name: 2020-05}], showLabels: true, showValues: true,
-        unpinAxis: false, tickDensity: default, tickDensityCustom: 5, type: linear}]
-    x_axis_label: Day of Month
+              - users.count, name: 2020-04}, {axisId: users.count, id: 2020-05 - users.count,
+            name: 2020-05}], showLabels: true, showValues: true, unpinAxis: false,
+        tickDensity: default, tickDensityCustom: 5, type: linear}]
+    x_axis_label: Signup Day of Month
+    x_axis_zoom: true
+    y_axis_zoom: true
     series_types: {}
+    series_colors:
+      2022-11 - users.count: "#c4c4c4"
+      2022-12 - users.count: "#1A73E8"
+    series_labels:
+      2022-12 - users.count: This Month
+      2022-11 - users.count: Last Month
+    label_color: []
     ordering: none
     show_null_labels: false
     show_totals_labels: false
@@ -272,15 +287,15 @@
     listen:
       City: users.city
       Traffic Source: users.traffic_source
-    row: 21
-    col: 12
+    row: 14
+    col: 0
     width: 12
-    height: 6
-  - title: Demographic Analysis
-    name: Demographic Analysis
+    height: 9
+  - title: Gross Revenue Share from Age and Gender Demographics
+    name: Gross Revenue Share from Age and Gender Demographics
     model: adv_lookml_thelook
     explore: order_items
-    type: looker_bar
+    type: looker_donut_multiples
     fields: [users.age_tiers, order_items.total_gross_revenue, users.gender]
     pivots: [users.age_tiers]
     fill_fields: [users.age_tiers]
@@ -289,11 +304,31 @@
     sorts: [users.age_tiers, users.gender]
     limit: 500
     column_limit: 50
-    total: true
-    row_total: right
+    show_value_labels: true
+    font_size: 25
+    color_application:
+      collection_id: b43731d5-dc87-4a8e-b807-635bef3948e7
+      palette_id: fb7bb53e-b77b-4ab6-8274-9d420d3d73f3
+      options:
+        steps: 5
+    series_colors: {}
+    series_labels:
+      Below 15 - 0 - order_items.total_gross_revenue: 'Age: Below 15'
     x_axis_gridlines: false
     y_axis_gridlines: true
     show_view_names: false
+    y_axes: [{label: '', orientation: left, series: [{axisId: 66 or Above - 5 - order_items.total_gross_revenue,
+            id: 66 or Above - 5 - order_items.total_gross_revenue, name: 66 or Above},
+          {axisId: 51 to 65 - 4 - order_items.total_gross_revenue, id: 51 to 65 -
+              4 - order_items.total_gross_revenue, name: 51 to 65}, {axisId: 36 to
+              50 - 3 - order_items.total_gross_revenue, id: 36 to 50 - 3 - order_items.total_gross_revenue,
+            name: 36 to 50}, {axisId: 26 to 35 - 2 - order_items.total_gross_revenue,
+            id: 26 to 35 - 2 - order_items.total_gross_revenue, name: 26 to 35}, {
+            axisId: 15 to 25 - 1 - order_items.total_gross_revenue, id: 15 to 25 -
+              1 - order_items.total_gross_revenue, name: 15 to 25}, {axisId: Below
+              15 - 0 - order_items.total_gross_revenue, id: Below 15 - 0 - order_items.total_gross_revenue,
+            name: 'Age: Below 15'}], showLabels: true, showValues: true, valueFormat: '[>=1000000]$0,,"M";[>=1000]$0,"K";$0',
+        unpinAxis: false, tickDensity: default, tickDensityCustom: 5, type: linear}]
     show_y_axis_labels: true
     show_y_axis_ticks: true
     y_axis_tick_density: default
@@ -304,43 +339,25 @@
     x_axis_reversed: false
     y_axis_reversed: false
     plot_size_by_field: false
+    x_axis_zoom: true
+    y_axis_zoom: true
     trellis: ''
     stacking: normal
     limit_displayed_rows: false
-    legend_position: center
+    legend_position: right
+    label_value_format: '[>=1000000]$0.00,,"M";[>=1000]$0,"K";$0'
+    series_types: {}
     point_style: circle
-    show_value_labels: false
     label_density: 25
     x_axis_scale: auto
+    x_axis_datetime_label: ''
     y_axis_combined: true
     ordering: none
     show_null_labels: false
+    column_group_spacing_ratio: 0
     show_totals_labels: true
     show_silhouette: false
     totals_color: "#808080"
-    color_application:
-      collection_id: b43731d5-dc87-4a8e-b807-635bef3948e7
-      palette_id: fb7bb53e-b77b-4ab6-8274-9d420d3d73f3
-      options:
-        steps: 5
-    y_axes: [{label: '', orientation: bottom, series: [{axisId: Below 15 - 0 - order_items.total_gross_revenue,
-            id: Below 15 - 0 - order_items.total_gross_revenue, name: Below 15}, {
-            axisId: 15 to 25 - 1 - order_items.total_gross_revenue, id: 15 to 25 -
-              1 - order_items.total_gross_revenue, name: 15 to 25}, {axisId: 26 to
-              35 - 2 - order_items.total_gross_revenue, id: 26 to 35 - 2 - order_items.total_gross_revenue,
-            name: 26 to 35}, {axisId: 36 to 50 - 3 - order_items.total_gross_revenue,
-            id: 36 to 50 - 3 - order_items.total_gross_revenue, name: 36 to 50}, {
-            axisId: 51 to 65 - 4 - order_items.total_gross_revenue, id: 51 to 65 -
-              4 - order_items.total_gross_revenue, name: 51 to 65}, {axisId: 66 or
-              Above - 5 - order_items.total_gross_revenue, id: 66 or Above - 5 - order_items.total_gross_revenue,
-            name: 66 or Above}], showLabels: true, showValues: true, valueFormat: '0,
-          "K"', unpinAxis: false, tickDensity: default, tickDensityCustom: 5, type: linear}]
-    font_size: '12'
-    label_value_format: ''
-    series_types: {}
-    series_colors: {}
-    series_labels: {}
-    x_axis_datetime_label: ''
     show_null_points: true
     show_sql_query_menu_options: false
     show_totals: true
@@ -370,10 +387,10 @@
     listen:
       City: users.city
       Traffic Source: users.traffic_source
-    row: 27
-    col: 0
+    row: 14
+    col: 12
     width: 12
-    height: 7
+    height: 9
   - title: New Customer Total Gross Revenue
     name: New Customer Total Gross Revenue
     model: adv_lookml_thelook
@@ -431,8 +448,8 @@
     listen:
       City: users.city
       Traffic Source: users.traffic_source
-    row: 27
-    col: 12
+    row: 23
+    col: 0
     width: 12
     height: 7
   - title: Revenue Source Comparison
@@ -491,10 +508,10 @@
     listen:
       City: users.city
       Traffic Source: users.traffic_source
-    row: 21
-    col: 0
+    row: 23
+    col: 12
     width: 12
-    height: 6
+    height: 7
   - title: Profitability by Location
     name: Profitability by Location
     model: adv_lookml_thelook
@@ -555,8 +572,8 @@
     listen:
       City: users.city
       Traffic Source: users.traffic_source
-    row: 12
-    col: 12
+    row: 30
+    col: 0
     width: 12
     height: 9
   - title: New Users
@@ -614,7 +631,7 @@
     listen:
       City: users.city
       Traffic Source: users.traffic_source
-    row: 8
+    row: 1
     col: 12
     width: 4
     height: 4
@@ -693,16 +710,16 @@
     listen:
       City: users.city
       Traffic Source: users.traffic_source
-    row: 34
+    row: 30
     col: 12
     width: 12
-    height: 7
+    height: 9
   - name: Year over year via dynamic merge
     title: Year over year via dynamic merge
     merged_queries:
     - model: adv_lookml_thelook
       explore: order_items
-      type: looker_line
+      type: table
       fields: [order_items.created_month, order_items.created_month_name, order_items.total_gross_revenue]
       filters:
         order_items.created_month: before 11 months ago,before 25 months ago
@@ -710,67 +727,7 @@
       limit: 12
       column_limit: 50
       query_timezone: user_timezone
-      x_axis_gridlines: false
-      y_axis_gridlines: true
-      show_view_names: false
-      show_y_axis_labels: true
-      show_y_axis_ticks: true
-      y_axis_tick_density: default
-      y_axis_tick_density_custom: 5
-      show_x_axis_label: true
-      show_x_axis_ticks: true
-      y_axis_scale_mode: linear
-      x_axis_reversed: false
-      y_axis_reversed: false
-      plot_size_by_field: false
-      trellis: ''
-      stacking: ''
-      limit_displayed_rows: false
-      legend_position: center
-      point_style: circle_outline
-      show_value_labels: false
-      label_density: 25
-      x_axis_scale: ordinal
-      y_axis_combined: true
-      show_null_points: false
-      interpolation: linear
-      y_axes: [{label: '', orientation: left, series: [{axisId: order_items.total_gross_revenue,
-              id: 2020 - order_items.total_gross_revenue, name: '2020'}, {axisId: order_items.total_gross_revenue,
-              id: 2019 - order_items.total_gross_revenue, name: '2019'}, {axisId: order_items.total_gross_revenue,
-              id: 2018 - order_items.total_gross_revenue, name: '2018'}, {axisId: order_items.total_gross_revenue,
-              id: 2017 - order_items.total_gross_revenue, name: '2017'}], showLabels: true,
-          showValues: true, valueFormat: '0, "K"', unpinAxis: false, tickDensity: default,
-          tickDensityCustom: 5, type: linear}]
-      x_axis_label: Month of the Year
-      series_types: {}
-      series_point_styles:
-        order_items.total_gross_revenue: auto
-      show_sql_query_menu_options: false
-      show_totals: true
-      show_row_totals: true
-      show_row_numbers: true
-      transpose: false
-      truncate_text: true
-      size_to_fit: true
-      series_cell_visualizations:
-        order_items.total_gross_revenue:
-          is_active: true
-      table_theme: white
-      enable_conditional_formatting: false
-      header_text_alignment: left
-      header_font_size: '12'
-      rows_font_size: '12'
-      conditional_formatting_include_totals: false
-      conditional_formatting_include_nulls: false
-      defaults_version: 1
-      hidden_fields: [order_items.created_month]
-      hide_totals: false
-      hide_row_totals: false
-      ordering: none
-      show_null_labels: false
-      show_totals_labels: false
-      show_silhouette: false
-      totals_color: "#808080"
+      join_fields: []
     - model: adv_lookml_thelook
       explore: order_items
       type: table
@@ -786,19 +743,20 @@
     hidden_fields: [order_items.created_month, q1_order_items.created_month]
     type: looker_line
     series_types: {}
-    row: 0
-    col: 7
+    column_limit: 50
+    row: 39
+    col: 0
     width: 17
     height: 8
-  - name: Top Line Metrics
+  - name: 'Top Line Key Performance Indicators '
     type: text
-    title_text: Top Line Metrics
+    title_text: 'Top Line Key Performance Indicators '
     subtitle_text: ''
     body_text: ''
     row: 0
     col: 0
-    width: 7
-    height: 8
+    width: 24
+    height: 1
   filters:
   - name: City
     title: City

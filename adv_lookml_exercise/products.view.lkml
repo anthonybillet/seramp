@@ -65,11 +65,17 @@ view: products {
     sql: ${TABLE}.brand ;;
     drill_fields: [detail*]
 
-  link: {
-    label: "{{value}} Analytics Dashboard"
-    url: "/dashboards-next/adv_lookml_thelook::brand_dashboard?Brand={{ value | encode_uri }}"
-    icon_url: "https://www.seekpng.com/png/full/138-1386046_google-analytics-integration-analytics-icon-blue-png.png"
-  }
+    link: {
+      label: "{{value}} Analytics Dashboard"
+      url: "/dashboards-next/adv_lookml_thelook::brand_dashboard?Brand={{ value | encode_uri }}"
+      icon_url: "https://www.seekpng.com/png/full/138-1386046_google-analytics-integration-analytics-icon-blue-png.png"
+    }
+
+    link: {
+      label: "{{value}} Google Search"
+      url: "https://www.google.com/search?q={{ value| encode_uri}}"
+      icon_url: "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.google.com/"
+    }
   }
 
   dimension: category {
