@@ -84,8 +84,8 @@ view: inventory_items {
     sql: ${TABLE}.sold_at ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: [id, product_name, products.name, products.id, order_items.count]
-  }
+  # measure: count {
+  #   type: count
+  #   drill_fields: [id, product_name, products.name, products.id, order_items.count]
+  # }
 }

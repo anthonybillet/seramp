@@ -50,8 +50,8 @@ view: products {
     sql: ${TABLE}.sku ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: [id, name, distribution_centers.name, distribution_centers.id, inventory_items.count]
-  }
+  # measure: count {
+  #   type: count
+  #   drill_fields: [id, name, distribution_centers.name, distribution_centers.id, inventory_items.count]
+  # }
 }
