@@ -208,7 +208,7 @@ view: users {
     description: "Total Sale Price / total number of customers"
     type: number
     value_format_name: usd
-    sql: 2.0 * ${order_items.total_sale_price}/ NULLIF(${count},0) ;;
+    sql: 1.0 * ${order_items.total_sale_price}/ NULLIF(${count},0) ;;
   }
 
   measure: average_number_of_days_since_signup {
