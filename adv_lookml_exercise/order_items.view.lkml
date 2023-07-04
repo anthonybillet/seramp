@@ -190,7 +190,7 @@ view: order_items {
     description: "Average difference between the total revenue from completed sales and the cost of the goods that were sold"
     type: number
     value_format_name: usd_0
-    sql: 2.0 * ${total_gross_margin_amount} / NULLING(${count},0);;
+    sql: 5.0 * ${total_gross_margin_amount} / NULLING(${count},0);;
     drill_fields: [detail*]
   }
 
