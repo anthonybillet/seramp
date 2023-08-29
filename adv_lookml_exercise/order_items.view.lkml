@@ -364,6 +364,56 @@ view: order_items {
     }
   }
 
+### key use case 4 ###
+
+parameter: date_granularity_selector  {
+  view_label: "Z) Key Use Case 4"
+  type: string
+  allowed_value: {
+    value: "Created Date"
+  }
+  allowed_value: {
+    value: "Created Week"
+  }
+  allowed_value: {
+    value: "Created Month"
+  }
+  default_value: "Date"
+}
+
+
+  # dynamoc created date 1 and 2 are two methods of doing the same thing
+  dimension: dynamic_created_date {
+    view_label: "Z) Key Use Case 4"
+    label_from_parameter: date_granularity_selector
+    type: string
+    sql: CASE
+          WHEN {% parameter date_granularity_selector %} = 'Created Date' THEN CAST(${created_date} AS string)
+          WHEN {% parameter date_granularity_selector %} = 'Created Week' THEN CAST(${created_week} AS string)
+          WHEN {% parameter date_granularity_selector %} = 'Created Month' THEN CAST(${created_month} AS string)
+          ELSE CAST(${created_date} AS string)
+         END
+          ;;
+  }
+
+  dimension: dynamic_created_date_2 {
+    view_label: "Z) Key Use Case 4"
+    type: string
+    label_from_parameter: date_granularity_selector
+    sql:
+    {% if date_granularity_selector._parameter_value == "'Created Date'" %}
+      ${created_date}
+    {% elsif date_granularity_selector._parameter_value == "'Created Week'" %}
+      ${created_week}
+    {% elsif date_granularity_selector._parameter_value == "'Created Month'" %}
+      ${created_month}
+    {% else %}
+      ${created_date}
+    {% endif %}
+    ;;
+  }
+
+
 
   # ----- Sets of fields for drilling ------
   set: detail {

@@ -7,6 +7,7 @@ view: user_order_facts {
         , CAST(MAX(order_items.created_at)  AS TIMESTAMP)  AS latest_order
       FROM thelook.users AS users
       LEFT JOIN thelook.order_items  AS order_items ON  users.id= order_items.user_id
+      WHERE {% condition age_filter %} users.age {% endcondition %}
       GROUP BY 1
       ORDER BY 2
        ;;
@@ -142,6 +143,71 @@ view: user_order_facts {
     sql:  1.0 * ${repeat_customers} / NULLIF ( ${paying_customers},0) ;;
     value_format_name: percent_2
   }
+
+  measure: total_lifetime_orders {
+    type: sum
+    sql: ${lifetime_total_order_count} ;;
+  }
+
+  measure: total_lifetime_revenue {
+    type: sum
+    sql: ${lifetime_total_gross_revenue} ;;
+  }
+
+  ### Key use case 4 ###
+
+  parameter: metric_selector  {
+    view_label: "Z) Key Use Case 4"
+    type: string
+    allowed_value: {
+      value: "Average Lifetime Orders"
+    }
+    allowed_value: {
+      value: "Total Lifetime Orders"
+    }
+    allowed_value: {
+      value: "Total Lifetime Revenue"
+    }
+    default_value: "Total Lifetime Orders"
+  }
+  # Dynamic Measure 1 and 2 are two ways of doing the same thing""
+  measure: dynamic_measure {
+    view_label: "Z) Key Use Case 4"
+    label_from_parameter: metric_selector
+    value_format_name: decimal_0
+    type: number
+    sql: {% if user_order_facts.metric_selector._parameter_value == "'Average Lifetime Orders'" %}
+            ${average_lifetme_orders}
+         {% elsif user_order_facts.metric_selector._parameter_value == "'Total Lifetime Revenue'" %}
+            ${total_lifetime_revenue}
+         {% elsif user_order_facts.metric_selector._parameter_value == "'Total Lifetime Orders'" %}
+            ${total_lifetime_orders}
+         {% else %}
+            ${total_lifetime_orders}
+         {% endif %}
+         ;;
+  }
+
+  measure: dynamic_measure_2 {
+    view_label: "Z) Key Use Case 4"
+    label_from_parameter: metric_selector
+    value_format_name: decimal_0
+    type: number
+    sql: CASE
+          WHEN {% parameter metric_selector %} = 'Average Lifetime Orders' THEN ${average_lifetme_orders}
+          WHEN {% parameter metric_selector %} = 'Total Lifetime Revenue' THEN  ${total_lifetime_revenue}
+          WHEN {% parameter metric_selector %} = 'Total Lifetime Orders' THEN   ${total_lifetime_orders}
+          ELSE ${total_lifetime_orders}
+         END
+         ;;
+  }
+
+  filter: age_filter {
+    view_label: "Z) Key Use Case 4"
+    type: number
+    sql: {% condition age_filter %} ${users.age} {% endcondition %}  ;;
+  }
+
 
   set: detail {
     fields: [user_id, lifetime_total_gross_revenue, lifetime_total_order_count, first_order_date, latest_order_date]
